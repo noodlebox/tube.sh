@@ -8,7 +8,7 @@ set -e
 # dump_from_map COLORS WIDTH HEIGHT DISPOSE
 dump_from_map() {
 	# Read palette
-	local n=0 colors=$1 width=$2 height=$3
+	local n=0 colors=$1 width=$2 height=$3 dispose=$4
 	while read r g b; do
 		tput initc $n $((r * 1000 / 255)) $((g * 1000 / 255)) $((b * 1000 / 255))
 		n=$((n + 1))
