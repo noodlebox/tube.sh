@@ -21,10 +21,11 @@ dump_from_map() {
 			if [[ "$dispose" == 'None' && "$n" -eq '255' ]]; then
 				tput cuf 2
 			else
-				tput setaf $n
-				printf '██'
+				tput setab $n
+				printf '  '
 			fi
 		done
+		tput sgr0
 		printf '\n'
 	done < <(od -v -tuC -An -w"$width")
 }
