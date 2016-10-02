@@ -2,7 +2,6 @@
 # tube.sh - display an indexed-color image in your terminal
 # Usage:
 #   tube.sh [ -z ] FILE [ DELAY ]
-trap 'tput rs1' INT TERM EXIT
 set -e
 
 if [[ "$1" == "-z" ]]; then
@@ -25,8 +24,9 @@ delay=${2:-$(identify -format '%T * 0.01\n' "$1[0]" | bc)}
 # Pre-generate terminal escape sequences
 identify -format '%[scene]\n' "$1" | parallel --bar ./cache.sh ${compress+'-z'} "$1"
 
-tput rs1
-tput sc
+trap 'tput rmcup; tput rs2' INT TERM EXIT
+tput smcup
+tput cup 0 0
 if [[ -v compress ]]; then
 	dump="gunzip -c"
 else
@@ -35,7 +35,7 @@ fi
 if [[ "$frames" -gt 1 ]]; then
 	n=0
 	until read -n1 -t "$delay"; do
-		tput rc
+		tput cup 0 0
 		$dump "$1.$n.dump${compress+.gz}"
 		n=$(((n + 1) % frames))
 	done
