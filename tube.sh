@@ -26,7 +26,8 @@ identify -format '%[scene]\n' "$1" | parallel --bar ./cache.sh ${compress+'-z'} 
 
 trap 'tput rmcup; tput rs2' INT TERM EXIT
 tput smcup
-tput cup 0 0
+#tput cup 0 0
+printf '\x1b[1;1H'
 if [[ -v compress ]]; then
 	dump="gunzip -c"
 else
@@ -35,7 +36,8 @@ fi
 if [[ "$frames" -gt 1 ]]; then
 	n=0
 	until read -n1 -t "$delay"; do
-		tput cup 0 0
+		#tput cup 0 0
+		printf '\x1b[1;1H'
 		$dump "$1.$n.dump${compress+.gz}"
 		n=$(((n + 1) % frames))
 	done
